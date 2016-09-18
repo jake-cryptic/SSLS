@@ -1,0 +1,10 @@
+ErrorDocument 403 /assets/errors/403.php
+ErrorDocument 404 /assets/errors/404.php
+ErrorDocument 500 /assets/errors/500.php
+
+
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteCond %{REQUEST_URI} !/$
+RewriteRule ^(.*)$ $1\.php
