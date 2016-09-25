@@ -40,6 +40,7 @@ if (!CheckLogin()){
 				<h1>Create an account</h1><br />
 				<form id="create_form">
 					<input type="text" id="create_email" name="create_email" placeholder="Email" class="textbox" required /><br />
+					<input type="text" id="create_username" name="create_username" placeholder="Username" class="textbox" required /><br />
 					<input type="password" id="create_pass" name="create_pass" placeholder="Password" class="textbox" required /><br />
 					<input type="password" id="create_passconf" name="create_passconf" placeholder="Confirm Password" class="textbox" required /><br />
 					<input type="hidden" id="create" name="create" value="<?php echo $_SESSION["csrf_token"]; ?>" /><br />

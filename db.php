@@ -33,6 +33,12 @@ class Database {
 		return $this->connection->query($sql);
 	}
 	
+	public function GetKey($pass,$salt){
+		$str = base64_encode($pass . $salt . $this->ek);
+		$hash = hash("sha512",$str);
+		return $hash;
+	}
+	
 	public function Disconnect(){
 		$this->connection->close();
 	}

@@ -7,6 +7,8 @@ function CheckLogin() {
 }
 
 function PermissionLevel($required) {
+	if ($required == false) return true;
+	
 	if (!isset($_SESSION["ua_account_type"]) || $_SESSION["ua_account_type"] < $required){
 		die("Access denied");
 	}
@@ -45,4 +47,56 @@ function CycleErrors($errors){
 		echo $e . "<br />";
 	}
 	die();
+}
+
+// Functions to get user information
+
+function CheckUserExists($username,$config){
+	$db_con = new AbsoluteDouble\SSLS\Database($config);
+	$db_obj = $db_con->Connect();
+	
+	$db_stmt = $db_obj->prepare("SELECT active FROM ssls WHERE username = ?");
+	$db_stmt->bind_param("s",$username);
+	
+	if (!$db_stmt->execute()){
+		return false;
+	}
+	if ($db_stmt->get_result()->num_rows == 0){
+		return false;
+	}
+	
+	$db_stmt->close();
+	$db_con->Disconnect();
+	
+	return true;
+}
+
+function GetUserDetails($username,$config){
+	$db_con = new AbsoluteDouble\SSLS\Database($config);
+	$db_obj = $db_con->Connect();
+	
+	$db_stmt = $db_obj->prepare("SELECT active,account_type,sign_up,last_login,username FROM ssls WHERE username = ?");
+	$db_stmt->bind_param("s",$username);
+	
+	$db_stmt->execute();
+	$db_stmt->store_result();
+	$num_row = $db_stmt->num_rows;
+
+	$db_stmt->bind_result($usr_act, $usr_typ, $usr_sgn, $usr_lgn, $usr_nme);
+
+	while ($db_stmt->fetch()) {
+		$_USER = array(
+			"ACTIVE"=>$usr_act,
+			"ACTYPE"=>$usr_typ,
+			"ACSIGN"=>$usr_sgn,
+			"ACLLGN"=>$usr_lgn,
+			"ACNAME"=>$usr_nme
+		);
+	}
+	
+	$db_stmt->free_result();
+	$db_stmt->close();
+	$db_con->Disconnect();
+	
+	return $_USER;
 }

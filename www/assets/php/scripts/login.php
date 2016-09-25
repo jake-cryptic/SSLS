@@ -24,9 +24,11 @@ if (!empty($_POST)){
 		} else {
 			$db = new AbsoluteDouble\SSLS\Database($config);
 			$db->Connect();
-			$query = $db->Run("SELECT password FROM ssls WHERE email='" . $user_em . "'");
+			$query = $db->Run("SELECT password,salt FROM ssls WHERE email='" . $user_em . "'");
 			if ($query->num_rows > 0){
-				$user_db_ps = $query->fetch_object()->password;
+				$data = $query->fetch_object();
+				$user_db_ps 	= $data->password;
+				$user_db_salt 	= $data->salt;
 			} else {
 				$errors[] = "Invalid email and password combination";
 			}
@@ -40,9 +42,10 @@ if (!empty($_POST)){
 			}
 			
 			$db_con = new AbsoluteDouble\SSLS\Database($config);
-			$db_con->Connect();
+			$db_obj = $db_con->Connect();
 			
 			$r = $db_con->Run("SELECT user_id, active, account_type, username, sign_up, last_login, last_ip FROM ssls WHERE email='" . $user_em . "'");
+			
 			if ($r->num_rows != 0) {
 				$data = $r->fetch_object();
 				$_SESSION["ua_email"] 			= $user_em;

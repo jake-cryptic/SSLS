@@ -9,4 +9,4 @@ if (CheckLogin()){
 }
 
 ?>
-Logged in, <a href="assets/php/scripts/logout.php">Logout?</a>
+Logged in as <?php echo $_SESSION["ua_username"]; ?>, <a href="assets/php/scripts/logout.php">Logout?</a>
